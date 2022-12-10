@@ -1,0 +1,19 @@
+create user Shariad123
+ identified by 1234
+ default tablespace USERS
+ temporary tablespace TEMP
+ QUOTA 100 M on USERS
+ QUOTA unlimited on SYSTEM
+ password expire
+ account unlock ;
+
+
+DROP TRIGGER IF EXISTS `shahriaddb`.`staffs_AFTER_UPDATE`;
+
+DELIMITER $$
+USE `shahriaddb`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `staffs_AFTER_UPDATE` AFTER UPDATE ON `staffs` FOR EACH ROW BEGIN
+	INSERT INTO salarylog(employeeID,oldSalary,newSalary,changedDate )
+    VALUES(NEW.employeeID,OLD.salary,NEW.SALARY);
+END$$
+DELIMITER ;
